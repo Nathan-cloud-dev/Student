@@ -1,6 +1,7 @@
-package com.api.Student.models;
+package com.api.student.models;
 
 
+import jakarta.validation.constraints.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
@@ -20,8 +21,14 @@ public class Student {
 
     @Id
     private Long id;
+    @NotBlank (message = "Name is required.")
     private String firstName;
     private String lastName;
+
+
+    @NotBlank (message = "Email should not be empty")
+    @Email
+    private String email;
     private String course;
     private Boolean isActive;
 
