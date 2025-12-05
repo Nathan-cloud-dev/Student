@@ -7,6 +7,8 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.relational.core.mapping.Table;
+import reactor.core.CoreSubscriber;
+import reactor.core.publisher.Mono;
 
 import java.time.LocalDateTime;
 
@@ -17,10 +19,10 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Builder
 @EqualsAndHashCode (of = "id")
-public class Student {
+public class Student extends Mono<Student> {
 
     @Id
-    private Long id;
+    private Long Id;
     @NotBlank (message = "Name is required.")
     private String firstName;
     private String lastName;
@@ -37,4 +39,9 @@ public class Student {
 
     @LastModifiedDate
     private LocalDateTime updatedAt;
+
+    @Override
+    public void subscribe(CoreSubscriber<? super Student> coreSubscriber) {
+
+    }
 }

@@ -37,4 +37,9 @@ public class StudentServiceImpl implements StudentService{
     public Mono<Student> updateById(Long id, Student student) {
         return repository.updateById(id,student);
     }
+
+    @Override
+    public Mono<Void> deleteById(Long id) {
+        return repository.deleteById(id);
+    }
 }

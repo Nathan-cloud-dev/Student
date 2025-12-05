@@ -6,9 +6,13 @@ import com.api.student.services.StudentService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.BufferOverflowStrategy;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.time.Duration;
 
 @Slf4j
 @RestController
@@ -38,15 +42,23 @@ public class StudentController {
         return service.findById(id);
     }
 
-    @GetMapping
+    @GetMapping (produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     @RequestMapping ("/students")
     public Flux<Student> findAll (){
-        return service.findAll ();
+        return service.findAll()
+                .onBackpressureBuffer(10, BufferOverflowStrategy.DROP_OLDEST)
+                .delayElements(Duration.ofMillis(100))
+                .log();
     }
 
     @PutMapping
     public Mono<Student>updateById (@PathVariable Long id, @RequestBody Student student){
         return service.updateById(id,student);
+    }
+
+    @DeleteMapping
+    public Mono<Void> deleteById (@PathVariable Long id){
+        return service.deleteById (id);
     }
 
 }
